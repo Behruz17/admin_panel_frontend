@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Form, Select, Input, Button, message, Popconfirm } from 'antd';
+import { Table, Form, Select, Input, Button, message, Popconfirm, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 
-const AdaptationPlanPage = () => {
+const { RangePicker } = DatePicker;
+
+const LineAdaptationPlanPage = () => {
   const [plans, setPlans] = useState([]);
   const [mentors, setMentors] = useState([]);
+  const [trainees, setTrainees] = useState([]);
   const [form] = Form.useForm();
   const [isAdmin, setIsAdmin] = useState(false);
   const [editing, setEditing] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchPlans();
     fetchMentors();
+    fetchTrainees();
     const role = sessionStorage.getItem('role');
     setIsAdmin(role === 'admin');
   }, []);
@@ -26,7 +33,9 @@ const AdaptationPlanPage = () => {
       });
       const data = await res.json();
       if (res.ok) {
-        setMentors(Array.isArray(data) ? data : []);
+        // Фильтруем только линейный персонал
+        const lineUsers = (Array.isArray(data) ? data : []).filter(user => user.role === 'line');
+        setMentors(lineUsers);
       } else {
         console.error('Error fetching mentors:', data);
         setMentors([]);
@@ -34,7 +43,24 @@ const AdaptationPlanPage = () => {
     } catch (error) {
       console.error('Error fetching mentors:', error);
       setMentors([]);
-      message.error('Ошибка при загрузке списка пользователей');
+      message.error('Ошибка при загрузке списка наставников');
+    }
+  };
+
+  const fetchTrainees = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/candidates/trainees');
+      const data = await res.json();
+      if (res.ok) {
+        setTrainees(data);
+      } else {
+        console.error('Error fetching trainees:', data);
+        setTrainees([]);
+      }
+    } catch (error) {
+      console.error('Error fetching trainees:', error);
+      setTrainees([]);
+      message.error('Ошибка при загрузке списка стажеров');
     }
   };
 
@@ -43,7 +69,7 @@ const AdaptationPlanPage = () => {
       const role = sessionStorage.getItem('role');
       const userId = sessionStorage.getItem('userId');
 
-      const res = await fetch('http://localhost:5000/adaptation-plan', {
+      const res = await fetch('http://localhost:5000/api/staff-adaptation-plans?type=line', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -72,12 +98,15 @@ const AdaptationPlanPage = () => {
       const role = sessionStorage.getItem('role');
       const method = values.id ? 'PUT' : 'POST';
       const url = values.id
-        ? `http://localhost:5000/adaptation-plan/${values.id}`
-        : 'http://localhost:5000/adaptation-plan';
+        ? `http://localhost:5000/api/staff-adaptation-plans/${values.id}`
+        : 'http://localhost:5000/api/staff-adaptation-plans';
     
       const body = {
         mentor_id: values.mentor_id,
-        link: values.link,
+        trainee_id: values.trainee_id,
+        start_date: values.period[0].format('YYYY-MM-DD'),
+        end_date: values.period[1].format('YYYY-MM-DD'),
+        plan_type: 'line',
         role,
       };
 
@@ -107,7 +136,7 @@ const AdaptationPlanPage = () => {
   const handleDelete = async (id) => {
     try {
       const role = sessionStorage.getItem('role');
-      const res = await fetch(`http://localhost:5000/adaptation-plan/${id}`, {
+      const res = await fetch(`http://localhost:5000/api/staff-adaptation-plans/${id}`, {
         method: 'DELETE',
         headers: {
           'Role': role,
@@ -127,13 +156,23 @@ const AdaptationPlanPage = () => {
     }
   };
 
+  const handleTraineeClick = (traineeId) => {
+    navigate(`/trainee/${traineeId}/tasks`);
+  };
+
   return (
     <div>
+      <h2>План адаптации для линейного персонала</h2>
       {isAdmin && (
-        <Form form={form} layout="inline" onFinish={onFinish} style={{ marginBottom: 24 }}>
+        <Form form={form} layout="vertical" onFinish={onFinish} style={{ marginBottom: 24 }}>
           <Form.Item name="id" hidden><Input /></Form.Item>
-          <Form.Item name="mentor_id" rules={[{ required: true, message: 'Выберите пользователя' }]}>
-            <Select placeholder="Выберите пользователя" style={{ width: 200 }}>
+          
+          <Form.Item 
+            name="mentor_id" 
+            label="Наставник"
+            rules={[{ required: true, message: 'Выберите наставника' }]}
+          >
+            <Select placeholder="Выберите наставника" style={{ width: '100%' }}>
               {Array.isArray(mentors) && mentors.map(m => (
                 <Select.Option key={m.id} value={m.id}>
                   {m.username}
@@ -141,16 +180,35 @@ const AdaptationPlanPage = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="link" rules={[{ required: true, message: 'Введите ссылку' }]}>
-            <Input placeholder="Ссылка" style={{ width: 300 }} />
+
+          <Form.Item 
+            name="trainee_id" 
+            label="Стажер"
+            rules={[{ required: true, message: 'Выберите стажера' }]}
+          >
+            <Select placeholder="Выберите стажера" style={{ width: '100%' }}>
+              {Array.isArray(trainees) && trainees.map(t => (
+                <Select.Option key={t.id} value={t.id}>
+                  {t.username}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
+
+          <Form.Item 
+            name="period" 
+            label="Период адаптации"
+            rules={[{ required: true, message: 'Укажите период адаптации' }]}
+          >
+            <RangePicker style={{ width: '100%' }} />
+          </Form.Item>
+
           <Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>
               {editing ? 'Обновить план' : 'Добавить план'}
             </Button>
             {editing && (
               <Button
-                style={{ marginLeft: 8 }}
                 onClick={() => {
                   form.resetFields();
                   setEditing(false);
@@ -166,11 +224,31 @@ const AdaptationPlanPage = () => {
         dataSource={Array.isArray(plans) ? plans : []}
         rowKey="id"
         columns={[
-          isAdmin ? { title: 'Пользователь', dataIndex: 'username' } : null,
+          { 
+            title: 'Наставник', 
+            dataIndex: ['mentor', 'username']
+          },
+          { 
+            title: 'Стажер', 
+            dataIndex: ['trainee', 'username'],
+            render: (username, record) => (
+              <Button 
+                type="link" 
+                onClick={() => handleTraineeClick(record.trainee.id)}
+              >
+                {username}
+              </Button>
+            )
+          },
           {
-            title: 'Ссылка',
-            dataIndex: 'link',
-            render: link => <a href={link} target="_blank" rel="noopener noreferrer">{link}</a>
+            title: 'Дата начала',
+            dataIndex: 'start_date',
+            render: date => moment(date).format('DD.MM.YYYY')
+          },
+          {
+            title: 'Дата окончания',
+            dataIndex: 'end_date',
+            render: date => moment(date).format('DD.MM.YYYY')
           },
           isAdmin ? {
             title: 'Действия',
@@ -182,8 +260,9 @@ const AdaptationPlanPage = () => {
                   onClick={() => {
                     form.setFieldsValue({
                       id: record.id,
-                      mentor_id: record.mentor_id,
-                      link: record.link,
+                      mentor_id: record.mentor.id,
+                      trainee_id: record.trainee.id,
+                      period: [moment(record.start_date), moment(record.end_date)]
                     });
                     setEditing(true);
                   }}
@@ -205,4 +284,4 @@ const AdaptationPlanPage = () => {
   );
 };
 
-export default AdaptationPlanPage;
+export default LineAdaptationPlanPage; 

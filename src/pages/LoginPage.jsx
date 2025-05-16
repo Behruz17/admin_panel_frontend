@@ -11,7 +11,7 @@ const LoginPage = () => {
   const handleLogin = async (values) => {
     setLoading(true);
     try {
-      const response = await axios.post('https://admin-panel-l87a.onrender.com/api/login', {
+      const response = await axios.post('http://localhost:5000/api/login', {
         username: values.username,
         password: values.password,
       });

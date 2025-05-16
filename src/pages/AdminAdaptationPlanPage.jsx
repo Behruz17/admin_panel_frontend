@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Form, Select, Input, Button, message, Popconfirm } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
-const AdaptationPlanPage = () => {
+const AdminAdaptationPlanPage = () => {
   const [plans, setPlans] = useState([]);
   const [mentors, setMentors] = useState([]);
   const [form] = Form.useForm();
@@ -26,7 +26,9 @@ const AdaptationPlanPage = () => {
       });
       const data = await res.json();
       if (res.ok) {
-        setMentors(Array.isArray(data) ? data : []);
+        // Фильтруем только админов
+        const adminUsers = (Array.isArray(data) ? data : []).filter(user => user.role === 'admin');
+        setMentors(adminUsers);
       } else {
         console.error('Error fetching mentors:', data);
         setMentors([]);
@@ -43,7 +45,7 @@ const AdaptationPlanPage = () => {
       const role = sessionStorage.getItem('role');
       const userId = sessionStorage.getItem('userId');
 
-      const res = await fetch('http://localhost:5000/adaptation-plan', {
+      const res = await fetch('http://localhost:5000/adaptation-plan/admin', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -72,8 +74,8 @@ const AdaptationPlanPage = () => {
       const role = sessionStorage.getItem('role');
       const method = values.id ? 'PUT' : 'POST';
       const url = values.id
-        ? `http://localhost:5000/adaptation-plan/${values.id}`
-        : 'http://localhost:5000/adaptation-plan';
+        ? `http://localhost:5000/adaptation-plan/admin/${values.id}`
+        : 'http://localhost:5000/adaptation-plan/admin';
     
       const body = {
         mentor_id: values.mentor_id,
@@ -107,7 +109,7 @@ const AdaptationPlanPage = () => {
   const handleDelete = async (id) => {
     try {
       const role = sessionStorage.getItem('role');
-      const res = await fetch(`http://localhost:5000/adaptation-plan/${id}`, {
+      const res = await fetch(`http://localhost:5000/adaptation-plan/admin/${id}`, {
         method: 'DELETE',
         headers: {
           'Role': role,
@@ -129,6 +131,7 @@ const AdaptationPlanPage = () => {
 
   return (
     <div>
+      <h2>План адаптации для административного персонала</h2>
       {isAdmin && (
         <Form form={form} layout="inline" onFinish={onFinish} style={{ marginBottom: 24 }}>
           <Form.Item name="id" hidden><Input /></Form.Item>
@@ -205,4 +208,4 @@ const AdaptationPlanPage = () => {
   );
 };
 
-export default AdaptationPlanPage;
+export default AdminAdaptationPlanPage; 

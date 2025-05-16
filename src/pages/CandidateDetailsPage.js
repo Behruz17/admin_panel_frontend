@@ -23,7 +23,7 @@ function CandidateDetailsPage() {
   useEffect(() => {
     const fetchCandidate = async () => {
       try {
-        const response = await axios.get(`https://admin-panel-l87a.onrender.com/candidates/${id}`);
+        const response = await axios.get(`http://localhost:5000/candidates/${id}`);
         setCandidate(response.data); // Set the candidate data from API response
         setLoading(false); // Set loading to false after data is fetched
       } catch (err) {
@@ -35,7 +35,7 @@ function CandidateDetailsPage() {
 
     const fetchCandidateTasks = async () => {
       try {
-        const taskRes = await axios.get(`https://admin-panel-l87a.onrender.com/candidateTasks/${id}`);
+        const taskRes = await axios.get(`http://localhost:5000/candidateTasks/${id}`);
 
         // Ensure you're extracting 'tasks' and 'completionPercentage' from the response
         const { tasks, completionPercentage } = taskRes.data;
@@ -70,7 +70,7 @@ function CandidateDetailsPage() {
 
   const handleRejectCandidate = async () => {
     try {
-      await axios.post("https://admin-panel-l87a.onrender.com/updateAdminStatus", {
+      await axios.post("http://localhost:5000/updateAdminStatus", {
         userId: candidate.id,
         adminStatus: "rejected",
       });
@@ -92,7 +92,7 @@ function CandidateDetailsPage() {
     }
 
     try {
-      await axios.post("https://admin-panel-l87a.onrender.com/updateAdminStatus", {
+      await axios.post("http://localhost:5000/updateAdminStatus", {
         userId: candidate.id,
         adminStatus: "interview",
         interviewDate: interviewDateTime.toISOString(),
@@ -112,7 +112,7 @@ function CandidateDetailsPage() {
 
   const handleAcceptCandidate = async () => {
     try {
-      await axios.post("https://admin-panel-l87a.onrender.com/updateAdminStatus", {
+      await axios.post("http://localhost:5000/updateAdminStatus", {
         userId: candidate.id,
         adminStatus: "accepted",
       });

@@ -14,7 +14,7 @@ function CandidatesPage() {
   useEffect(() => {
     const fetchCandidates = async () => {
       try {
-        const response = await axios.get("https://admin-panel-l87a.onrender.com/candidates");
+        const response = await axios.get("http://localhost:5000/candidates");
         setData(response.data);  // Set data from API response
         setLoading(false);        // Set loading to false after data is fetched
       } catch (err) {

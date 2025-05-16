@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import { UserOutlined, FileSearchOutlined, LinkOutlined, QuestionCircleOutlined, FileTextOutlined, TeamOutlined } from "@ant-design/icons";
 
@@ -12,15 +12,16 @@ import LoginPage from "./pages/LoginPage";
 import SurveyPage from "./pages/SurveyPage";
 import TasksPage from "./pages/TasksPage";
 import MentorsPage from "./pages/MentorsPage";
-import AdaptationPlanPage from "./pages/AdaptationPlanPage";
+import AdminAdaptationPlanPage from "./pages/AdminAdaptationPlanPage";
+import OpAdaptationPlanPage from "./pages/OpAdaptationPlanPage";
+import LineAdaptationPlanPage from "./pages/LineAdaptationPlanPage";
+import TraineeDetailsPage from "./pages/TraineeDetailsPage";
 
 const { Header, Sider, Content } = Layout;
 
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Check if the user is logged in using the JWT token in sessionStorage
   const token = sessionStorage.getItem("token");
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const App = () => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       {token && location.pathname !== "/login" && (
-        <Sider breakpoint="lg" collapsedWidth="0">
+        <Sider breakpoint="lg" collapsedWidth="0" width={240}>
           <div className="logo" style={{ color: "white", padding: 20, textAlign: "center" }}>
             HR Admin
           </div>
@@ -45,13 +46,17 @@ const App = () => {
             onClick={({ key }) => navigate(key)}
           >
             <Menu.Item key="/candidates" icon={<UserOutlined />}>Кандидаты</Menu.Item>
-            <Menu.Item key="/mentors" icon={<TeamOutlined />}>Менторы</Menu.Item> {/* Updated icon */}
-            <Menu.Item key="/tasks" icon={<FileSearchOutlined />}>Задачи</Menu.Item> {/* Add tasks menu */}
+            <Menu.Item key="/mentors" icon={<TeamOutlined />}>Пользователи</Menu.Item>
+            <Menu.Item key="/tasks" icon={<FileSearchOutlined />}>Задачи</Menu.Item>
             <Menu.Item key="/faq" icon={<QuestionCircleOutlined />}>FAQ</Menu.Item>
             <Menu.Item key="/mini-test" icon={<FileTextOutlined />}>Мини Тест</Menu.Item>
             <Menu.Item key="/notifications" icon={<FileTextOutlined />}>Уведомления</Menu.Item>
             <Menu.Item key="/survey" icon={<FileSearchOutlined />}>Опросник</Menu.Item>
-            <Menu.Item key="/adaptation-plan" icon={<LinkOutlined />}>План Адаптации</Menu.Item>
+            <Menu.SubMenu key="adaptation" icon={<LinkOutlined />} title="Планы Адаптации">
+              <Menu.Item key="/adaptation-plan/admin">Админ персонал</Menu.Item>
+              <Menu.Item key="/adaptation-plan/op">ОП</Menu.Item>
+              <Menu.Item key="/adaptation-plan/line">Линейный персонал</Menu.Item>
+            </Menu.SubMenu>
           </Menu>
         </Sider>
       )}
@@ -63,14 +68,17 @@ const App = () => {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/candidates" element={<CandidatesPage />} />
               <Route path="/candidates/:id" element={<CandidateDetailsPage />} />
-              <Route path="/tasks" element={<TasksPage />} /> {/* Add this route */}
+              <Route path="/trainee/:id/tasks" element={<TraineeDetailsPage />} />
+              <Route path="/tasks" element={<TasksPage />} />
               <Route path="/faq" element={<FAQPage />} />
               <Route path="/mini-test" element={<MiniTestPage />} />
-              <Route path="*" element={<CandidatesPage />} />
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/survey" element={<SurveyPage />} />
               <Route path="/mentors" element={<MentorsPage />} />
-              <Route path="/adaptation-plan" element={<AdaptationPlanPage />} />
+              <Route path="/adaptation-plan/admin" element={<AdminAdaptationPlanPage />} />
+              <Route path="/adaptation-plan/op" element={<OpAdaptationPlanPage />} />
+              <Route path="/adaptation-plan/line" element={<LineAdaptationPlanPage />} />
+              <Route path="*" element={<CandidatesPage />} />
             </Routes>
           </div>
         </Content>
