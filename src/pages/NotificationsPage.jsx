@@ -21,7 +21,7 @@ const NotificationsPage = () => {
     useEffect(() => {
         const fetchCandidates = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/candidates");
+                const response = await axios.get("https://admin-panel-l87a.onrender.com/candidates");
                 setUsers(response.data);
             } catch (err) {
                 console.error("Error fetching data");
@@ -34,7 +34,7 @@ const NotificationsPage = () => {
     const handleSend = async (values) => {
         setLoading(true);
         try {
-            await axios.post('http://localhost:5000/api/notifications/send', values);
+            await axios.post('https://admin-panel-l87a.onrender.com/api/notifications/send', values);
             toast.success("Уведомления отправлены!");
             form.resetFields();
         } catch (err) {

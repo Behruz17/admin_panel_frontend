@@ -19,7 +19,7 @@ const AdminAdaptationPlanPage = () => {
   const fetchMentors = async () => {
     try {
       const role = sessionStorage.getItem('role');
-      const res = await fetch('http://localhost:5000/mentors', {
+      const res = await fetch('https://admin-panel-l87a.onrender.com/mentors', {
         headers: {
           'role': role
         }
@@ -45,7 +45,7 @@ const AdminAdaptationPlanPage = () => {
       const role = sessionStorage.getItem('role');
       const userId = sessionStorage.getItem('userId');
 
-      const res = await fetch('http://localhost:5000/adaptation-plan/admin', {
+      const res = await fetch('https://admin-panel-l87a.onrender.com/adaptation-plan/admin', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -74,8 +74,8 @@ const AdminAdaptationPlanPage = () => {
       const role = sessionStorage.getItem('role');
       const method = values.id ? 'PUT' : 'POST';
       const url = values.id
-        ? `http://localhost:5000/adaptation-plan/admin/${values.id}`
-        : 'http://localhost:5000/adaptation-plan/admin';
+        ? `https://admin-panel-l87a.onrender.com/adaptation-plan/admin/${values.id}`
+        : 'https://admin-panel-l87a.onrender.com/adaptation-plan/admin';
     
       const body = {
         mentor_id: values.mentor_id,
@@ -109,7 +109,7 @@ const AdminAdaptationPlanPage = () => {
   const handleDelete = async (id) => {
     try {
       const role = sessionStorage.getItem('role');
-      const res = await fetch(`http://localhost:5000/adaptation-plan/admin/${id}`, {
+      const res = await fetch(`https://admin-panel-l87a.onrender.com/adaptation-plan/admin/${id}`, {
         method: 'DELETE',
         headers: {
           'Role': role,

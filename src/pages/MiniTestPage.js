@@ -14,7 +14,7 @@ const MiniTestPage = () => {
     // Загружаем вопросы с сервера при монтировании компонента
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/questions');
+        const response = await axios.get('https://admin-panel-l87a.onrender.com/api/questions');
         setQuestions(response.data); // Обновляем состояние с полученными данными
       } catch (err) {
         console.error("Ошибка при загрузке вопросов:", err);
@@ -28,7 +28,7 @@ const MiniTestPage = () => {
     try {
       if (editIndex !== null) {
         const { id } = questions[editIndex];
-        await axios.put(`http://localhost:5000/api/questions/${id}`, {
+        await axios.put(`https://admin-panel-l87a.onrender.com/api/questions/${id}`, {
           question: values.question_text,
         });
 
@@ -36,7 +36,7 @@ const MiniTestPage = () => {
         updated[editIndex].question_text = values.question_text;
         setQuestions(updated);
       } else {
-        const response = await axios.post('http://localhost:5000/api/questions', {
+        const response = await axios.post('https://admin-panel-l87a.onrender.com/api/questions', {
           question: values.question_text,
         });
 
@@ -57,7 +57,7 @@ const MiniTestPage = () => {
   const onDelete = async (index) => {
     const { id } = questions[index];
     try {
-      await axios.delete(`http://localhost:5000/api/questions/${id}`);
+      await axios.delete(`https://admin-panel-l87a.onrender.com/api/questions/${id}`);
       const updated = questions.filter((_, i) => i !== index);
       setQuestions(updated);
     } catch (err) {

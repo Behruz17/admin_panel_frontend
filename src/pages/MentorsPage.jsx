@@ -30,7 +30,7 @@ const MentorsPage = () => {
 
     // Функция для получения списка пользователей с сервера
     const fetchMentors = async () => {
-        const res = await fetch('http://localhost:5000/mentors', {
+        const res = await fetch('https://admin-panel-l87a.onrender.com/mentors', {
             headers: {
                 'role': sessionStorage.getItem('role')
             }
@@ -48,7 +48,7 @@ const MentorsPage = () => {
 
     // Функция для создания пользователя
     const handleCreate = async (values) => {
-        const res = await fetch('http://localhost:5000/mentors', {
+        const res = await fetch('https://admin-panel-l87a.onrender.com/mentors', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ const MentorsPage = () => {
     };
 
     const handleEdit = async (values) => {
-        const res = await fetch(`http://localhost:5000/mentors/${editingUser.id}`, {
+        const res = await fetch(`https://admin-panel-l87a.onrender.com/mentors/${editingUser.id}`, {
             method: 'PUT',
             headers: { 
                 'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ const MentorsPage = () => {
     };
 
     const handleDelete = async (id) => {
-        const res = await fetch(`http://localhost:5000/mentors/${id}`, {
+        const res = await fetch(`https://admin-panel-l87a.onrender.com/mentors/${id}`, {
             method: 'DELETE',
             headers: {
                 'role': sessionStorage.getItem('role')

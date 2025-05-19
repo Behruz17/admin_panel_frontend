@@ -27,14 +27,14 @@ const TraineeDetailsPage = () => {
     setLoading(true);
     try {
       // Получаем информацию о стажере
-      const traineeResponse = await fetch(`http://localhost:5000/candidates/${id}`);
+      const traineeResponse = await fetch(`https://admin-panel-l87a.onrender.com/candidates/${id}`);
       const traineeData = await traineeResponse.json();
       if (traineeResponse.ok) {
         setTraineeName(traineeData.username || 'Стажер');
       }
 
       // Получаем задачи стажера
-      const tasksResponse = await fetch(`http://localhost:5000/candidateTasks/${id}`);
+      const tasksResponse = await fetch(`https://admin-panel-l87a.onrender.com/candidateTasks/${id}`);
       const tasksData = await tasksResponse.json();
       if (tasksResponse.ok) {
         setTasks(tasksData.tasks || []);
@@ -50,13 +50,13 @@ const TraineeDetailsPage = () => {
   const handleAddTask = async (values) => {
     try {
       // Сначала создаем задачу
-      const taskResponse = await axios.post('http://localhost:5000/tasks', {
+      const taskResponse = await axios.post('https://admin-panel-l87a.onrender.com/tasks', {
         title: values.title,
         deadline: values.deadline.format('YYYY-MM-DD'),
       });
 
       // Затем назначаем её стажеру
-      await axios.post('http://localhost:5000/assign-task', [{
+      await axios.post('https://admin-panel-l87a.onrender.com/assign-task', [{
         candidateId: id,
         taskId: taskResponse.data.id,
       }]);

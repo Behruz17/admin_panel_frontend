@@ -15,14 +15,14 @@ const FAQPage = () => {
   const [editId, setEditId] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/faqs')
+    axios.get('https://admin-panel-l87a.onrender.com/api/faqs')
       .then(res => setFaqs(res.data))
       .catch(() => toast.error('Не удалось загрузить FAQ'));
   }, []);
 
   const onFinish = (values) => {
     if (editIndex !== null) {
-      axios.put(`http://localhost:5000/api/faqs/${editId}`, values)
+      axios.put(`https://admin-panel-l87a.onrender.com/api/faqs/${editId}`, values)
         .then(res => {
           const updatedFaqs = [...faqs];
           updatedFaqs[editIndex] = res.data;
@@ -31,7 +31,7 @@ const FAQPage = () => {
         })
         .catch(() => toast.error('Не удалось обновить FAQ'));
     } else {
-      axios.post('http://localhost:5000/api/faqs', values)
+      axios.post('https://admin-panel-l87a.onrender.com/api/faqs', values)
         .then(res => {
           setFaqs([...faqs, res.data]);
           toast.success('FAQ добавлен');
@@ -51,7 +51,7 @@ const FAQPage = () => {
 
   const onDelete = (index) => {
     const id = faqs[index].id;
-    axios.delete(`http://localhost:5000/api/faqs/${id}`)
+    axios.delete(`https://admin-panel-l87a.onrender.com/api/faqs/${id}`)
       .then(() => {
         const updatedFaqs = faqs.filter((_, i) => i !== index);
         setFaqs(updatedFaqs);

@@ -26,7 +26,7 @@ const LineAdaptationPlanPage = () => {
   const fetchMentors = async () => {
     try {
       const role = sessionStorage.getItem('role');
-      const res = await fetch('http://localhost:5000/mentors', {
+      const res = await fetch('https://admin-panel-l87a.onrender.com/mentors', {
         headers: {
           'role': role
         }
@@ -49,7 +49,7 @@ const LineAdaptationPlanPage = () => {
 
   const fetchTrainees = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/candidates/trainees');
+      const res = await fetch('https://admin-panel-l87a.onrender.com/api/candidates/trainees');
       const data = await res.json();
       if (res.ok) {
         setTrainees(data);
@@ -69,7 +69,7 @@ const LineAdaptationPlanPage = () => {
       const role = sessionStorage.getItem('role');
       const userId = sessionStorage.getItem('userId');
 
-      const res = await fetch('http://localhost:5000/api/staff-adaptation-plans?type=line', {
+      const res = await fetch('https://admin-panel-l87a.onrender.com/api/staff-adaptation-plans?type=line', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -98,8 +98,8 @@ const LineAdaptationPlanPage = () => {
       const role = sessionStorage.getItem('role');
       const method = values.id ? 'PUT' : 'POST';
       const url = values.id
-        ? `http://localhost:5000/api/staff-adaptation-plans/${values.id}`
-        : 'http://localhost:5000/api/staff-adaptation-plans';
+        ? `https://admin-panel-l87a.onrender.com/api/staff-adaptation-plans/${values.id}`
+        : 'https://admin-panel-l87a.onrender.com/api/staff-adaptation-plans';
     
       const body = {
         mentor_id: values.mentor_id,
@@ -136,7 +136,7 @@ const LineAdaptationPlanPage = () => {
   const handleDelete = async (id) => {
     try {
       const role = sessionStorage.getItem('role');
-      const res = await fetch(`http://localhost:5000/api/staff-adaptation-plans/${id}`, {
+      const res = await fetch(`https://admin-panel-l87a.onrender.com/api/staff-adaptation-plans/${id}`, {
         method: 'DELETE',
         headers: {
           'Role': role,

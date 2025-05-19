@@ -42,7 +42,7 @@ const SurveyPage = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/surveyQuestions');
+        const response = await axios.get('https://admin-panel-l87a.onrender.com/surveyQuestions');
         const data = response.data.map(q => ({
           ...q,
           questionText: q.questionText || q.question || ''
@@ -59,7 +59,7 @@ const SurveyPage = () => {
   useEffect(() => {
     const fetchResponses = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/surveyResponses');
+        const res = await axios.get('https://admin-panel-l87a.onrender.com/surveyResponses');
         const rawResponses = res.data;
         const grouped = rawResponses.reduce((acc, curr) => {
           const key = `${curr.userId}_${dayjs(curr.date).format('YYYY-MM-DD HH:mm:ss')}`;
@@ -120,7 +120,7 @@ const SurveyPage = () => {
 
       setQuestions(updatedQuestions);
       axios
-        .put(`http://localhost:5000/surveyQuestions/${questions[editIndex].id}`, {
+        .put(`https://admin-panel-l87a.onrender.com/surveyQuestions/${questions[editIndex].id}`, {
           questionText: values.question,
         })
         .then(() => {
@@ -129,7 +129,7 @@ const SurveyPage = () => {
         .catch(() => toast.error('Ошибка при обновлении вопроса'));
     } else {
       axios
-        .post('http://localhost:5000/surveyQuestions', {
+        .post('https://admin-panel-l87a.onrender.com/surveyQuestions', {
           questionText: values.question
         })
         .then((response) => {
@@ -156,7 +156,7 @@ const SurveyPage = () => {
   const onDelete = (index) => {
     const questionId = questions[index].id;
     axios
-      .delete(`http://localhost:5000/surveyQuestions/${questionId}`)
+      .delete(`https://admin-panel-l87a.onrender.com/surveyQuestions/${questionId}`)
       .then(() => {
         const updatedQuestions = questions.filter((_, i) => i !== index);
         setQuestions(updatedQuestions);
@@ -211,7 +211,7 @@ const SurveyPage = () => {
 
   const sendSurveyToAll = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/survey');
+      const response = await axios.post('https://admin-panel-l87a.onrender.com/survey');
       console.log('er', response);
 
       if (response.status === 201) {

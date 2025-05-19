@@ -28,9 +28,9 @@ const TasksPage = () => {
             setLoading(true);
             try {
                 const [tasksResponse, candidatesResponse, assignedTasksResponse] = await Promise.all([
-                    axios.get("http://localhost:5000/tasks"),
-                    axios.get("http://localhost:5000/candidates"),
-                    axios.get("http://localhost:5000/assigned-tasks"),
+                    axios.get("https://admin-panel-l87a.onrender.com/tasks"),
+                    axios.get("https://admin-panel-l87a.onrender.com/candidates"),
+                    axios.get("https://admin-panel-l87a.onrender.com/assigned-tasks"),
                 ]);
                 setTasks(tasksResponse.data);
                 setCandidates(candidatesResponse.data);
@@ -70,7 +70,7 @@ const TasksPage = () => {
     const handleSave = async (values) => {
         if (editingTask) {
             try {
-                await axios.put(`http://localhost:5000/tasks/${editingTask.id}`, {
+                await axios.put(`https://admin-panel-l87a.onrender.com/tasks/${editingTask.id}`, {
                     ...values,
                     deadline: values.deadline.format("YYYY-MM-DD"),
                 });
@@ -87,7 +87,7 @@ const TasksPage = () => {
             }
         } else {
             try {
-                const response = await axios.post("http://localhost:5000/tasks", {
+                const response = await axios.post("https://admin-panel-l87a.onrender.com/tasks", {
                     ...values,
                     deadline: values.deadline.format("YYYY-MM-DD"),
                 });
@@ -104,7 +104,7 @@ const TasksPage = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/tasks/${id}`);
+            await axios.delete(`https://admin-panel-l87a.onrender.com/tasks/${id}`);
             setTasks(tasks.filter((task) => task.id !== id));
             toast.success("Task deleted successfully!");
         } catch (error) {
@@ -133,7 +133,7 @@ const TasksPage = () => {
 
         try {
             // Send the new assignments to the server
-            const response = await axios.post("http://localhost:5000/assign-task", newAssignments);
+            const response = await axios.post("https://admin-panel-l87a.onrender.com/assign-task", newAssignments);
             toast.success(`Задачи успешно назначены!`);
 
             // Create new assigned tasks data based on the new assignments

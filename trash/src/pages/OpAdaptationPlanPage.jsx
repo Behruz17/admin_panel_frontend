@@ -46,9 +46,9 @@ const OpAdaptationPlanPage = () => {
   const fetchData = async () => {
     try {
       const [plansRes, mentorsRes, traineesRes] = await Promise.all([
-        axios.get('http://localhost:5000/api/staff-adaptation-plans'),
-        axios.get('http://localhost:5000/api/users/mentors'),
-        axios.get('http://localhost:5000/api/candidates/trainees'),
+        axios.get('https://admin-panel-l87a.onrender.com/api/staff-adaptation-plans'),
+        axios.get('https://admin-panel-l87a.onrender.com/api/users/mentors'),
+        axios.get('https://admin-panel-l87a.onrender.com/api/candidates/trainees'),
       ]);
 
       setPlans(plansRes.data);
@@ -100,9 +100,9 @@ const OpAdaptationPlanPage = () => {
       };
 
       if (editingPlan) {
-        await axios.put(`http://localhost:5000/api/staff-adaptation-plans/${editingPlan.id}`, payload);
+        await axios.put(`https://admin-panel-l87a.onrender.com/api/staff-adaptation-plans/${editingPlan.id}`, payload);
       } else {
-        await axios.post('http://localhost:5000/api/staff-adaptation-plans', payload);
+        await axios.post('https://admin-panel-l87a.onrender.com/api/staff-adaptation-plans', payload);
       }
 
       handleCloseDialog();
@@ -115,7 +115,7 @@ const OpAdaptationPlanPage = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this plan?')) {
       try {
-        await axios.delete(`http://localhost:5000/api/staff-adaptation-plans/${id}`);
+        await axios.delete(`https://admin-panel-l87a.onrender.com/api/staff-adaptation-plans/${id}`);
         fetchData();
       } catch (error) {
         console.error('Error deleting plan:', error);
